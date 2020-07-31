@@ -1,0 +1,13 @@
+#gpex-counter {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  background-color: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  padding: 12px 24px;
+}
+#gpex-counter::before {
+  content: "文字数：";
+}

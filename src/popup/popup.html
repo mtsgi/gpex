@@ -2,16 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
-  <link rel="stylesheet" href="popup.css">
+  <title>Gpex Popup</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <% if (NODE_ENV === 'development') { %>
   <!-- Load some resources only in development environment -->
   <% } %>
 </head>
-<body>
-  <div id="app">
-
-  </div>
+<body style="width: 720px; min-height: 480px">
+  <div id="app" ></div>
   <script src="popup.js"></script>
+  <style>
+    .logo-img {
+      max-width: 75%;
+      margin-bottom: 8px;
+    }
+    .el-checkbox {
+      height: 50px !important;
+      display: block;
+      margin-top: 10px;
+    }
+    .el-checkbox .el-checkbox__label {
+      display: inline-flex;
+      width: calc(100% - 20px);
+      line-height: 30px;
+    }
+    .el-checkbox .el-select {
+      margin-right: 12px;
+    }
+    .el-checkbox .el-checkbox__label > strong {
+      flex-grow: 1;
+    }
+  </style>
 </body>
 </html>
