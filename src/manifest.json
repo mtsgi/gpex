@@ -7,10 +7,21 @@
     "48": "icons/icon_48.png",
     "128": "icons/icon_128.png"
   },
+  "permissions": ["tabs","storage"],
   "browser_action": {
-    "default_title": "gpex",
+    "default_icon": {
+      "48": "icons/icon_48.png"
+    },
+    "default_title": "Gpex",
     "default_popup": "popup/popup.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "css": ["./content/style.css"],
+      "js": ["content/content.js"]
+    }
+  ],
   "background": {
     "scripts": [
       "background.js"
