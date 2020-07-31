@@ -26,7 +26,6 @@ global.browser.runtime.onMessage.addListener(async request => {
               defaultExportType = 'xlsx';
               dlLinkDir = 'spreadsheets';
             } else if (type === 'Google スライド') {
-              defaultExportType = 'pdf';
               downloadable = false;
             }
           }

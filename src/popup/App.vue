@@ -56,7 +56,7 @@ export default {
         else if (doc.gdocs)
           dlLink = doc.href.replace(
             /https?:\/\/drive\.google\.com\/open\?id=(.*)&authuser=(.*)&?/,
-            `http://docs.google.com/${doc.dlLinkDir}/d/$1/export?authuser=$2&format=${doc.exportType || 'pdf'}`
+            `http://docs.google.com/${doc.dlLinkDir}/d/$1/export?authuser=$2&format=${doc.exportType || doc.defaultExportType || 'pdf'}`
           );
         else dlLink = doc.href.replace(/https?:\/\/drive\.google\.com\/open\?/, 'https://drive.google.com/uc?export=download&');
         // console.log('LINK', dlLink);
