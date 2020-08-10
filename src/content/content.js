@@ -3,7 +3,7 @@ global.browser = require('webextension-polyfill');
 global.browser.runtime.onMessage.addListener(async request => {
   const result = [];
   const selector = 'a[aria-label][data-focus-id][target=_blank]';
-  const docsTypes = ['Google ドキュメント', 'Google スプレッドシート', 'Google スライド'];
+  const docsTypes = ['Google ドキュメント', 'Google スプレッドシート', 'Google スライド', 'Google フォーム'];
   switch (request.query) {
     case 'getDocs':
       document.querySelectorAll(selector).forEach(doc => {
@@ -27,6 +27,8 @@ global.browser.runtime.onMessage.addListener(async request => {
               dlLinkDir = 'spreadsheets';
             } else if (type === 'Google スライド') {
               downloadable = false;
+            } else if (type === 'Google フォーム') {
+              downloadable = false;
             }
           }
           result.push({
@@ -42,6 +44,13 @@ global.browser.runtime.onMessage.addListener(async request => {
         }
       });
       return result;
+    case 'getClassInfo':
+      if (location.href.includes('classroom.google.com')) {
+        return {
+          classTitle: document.querySelector('nav h1 span:first-child').textContent,
+          classInfo: document.querySelector('nav h1 span:last-child').textContent
+        };
+      } else return { classTitle: '対象ページではありません' };
     default:
       return false;
   }
@@ -54,7 +63,6 @@ if (location.href.includes('docs.google.com/forms')) {
   counter.hidden = true;
 
   document.querySelectorAll('.exportTextarea').forEach(textarea => {
-    console.warn(textarea);
     ['click', 'keyup', 'change', 'keydown'].forEach(eventType => {
       textarea.addEventListener(eventType, e => {
         counter.hidden = false;
