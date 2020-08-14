@@ -1,8 +1,10 @@
 <template>
   <div>
     <img class="logo-img" src="../logo.png" alt="Gpex" />
+    <h2 v-text="classTitle"></h2>
+    <p v-text="classInfo"></p>
     <el-row>
-      <el-button @click="showDocs">資料一覧を取得</el-button>
+      <el-button @click="showDocs">資料一覧を更新</el-button>
       <el-button @click="downloadChecked" type="primary">チェック済をダウンロード</el-button>
     </el-row>
     <el-checkbox-group v-model="checkboxGroup">
@@ -15,7 +17,7 @@
             <el-option value="xlsx">Excel(xlsx)</el-option>
             <el-option value="txt">テキスト(txt)</el-option>
             <el-option value="odt">ODT(odt)</el-option>
-            <el-option value="zip">圧縮(zip)</el-option>
+            <el-option value="zip">HTML(zip)</el-option>
           </el-select>
           <span class="doc-type">種別：{{ doc.type }}</span>
         </el-checkbox>
@@ -28,11 +30,25 @@
 export default {
   data() {
     return {
+      classTitle: '不明',
+      classInfo: '情報を取得していません',
       docs: [],
       checkboxGroup: []
     };
   },
+  mounted() {
+    this.getClassInfo();
+    this.showDocs();
+  },
   methods: {
+    getClassInfo() {
+      global.browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
+        global.browser.tabs.sendMessage(tabs[0].id, { query: 'getClassInfo' }).then(e => {
+          this.classTitle = e.classTitle;
+          this.classInfo = e.classInfo;
+        });
+      });
+    },
     showDocs() {
       global.browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
         global.browser.tabs
@@ -51,15 +67,13 @@ export default {
       this.checkboxGroup.forEach(index => {
         let dlLink = null;
         const doc = this.docs[index];
-        console.warn(doc);
         if (!doc.downloadable) dlLink = null;
         else if (doc.gdocs)
           dlLink = doc.href.replace(
             /https?:\/\/drive\.google\.com\/open\?id=(.*)&authuser=(.*)&?/,
-            `http://docs.google.com/${doc.dlLinkDir}/d/$1/export?authuser=$2&format=${doc.exportType || 'pdf'}`
+            `http://docs.google.com/${doc.dlLinkDir}/d/$1/export?authuser=$2&format=${doc.exportType || doc.defaultExportType || 'pdf'}`
           );
         else dlLink = doc.href.replace(/https?:\/\/drive\.google\.com\/open\?/, 'https://drive.google.com/uc?export=download&');
-        // console.log('LINK', dlLink);
         if (dlLink)
           global.browser.tabs.create({
             url: dlLink,
